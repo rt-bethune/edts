@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8" />
+        <title>Edt R&T et GEII</title>
+        <script src="lib/moment.min.js" ></script>
+        <script type="text/javascript">
+        function resizeIframe(obj) {
+            obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+        }
+        function startTime() {
+           moment.locale('fr');
+           document.getElementById('time').innerHTML = moment().format('LLLL');
+           var t = setTimeout(startTime, 60000);
+        }
+        </script>
+    </head>
+    <body  onload="startTime()">
+        <center><h1><a href="edtrt.html" >Département R&T</a> </h1>
+        <h1><a href="edtgeii.html" >Département GEII</a> </h1>
+        <h1><a href="edtgc.html" >Département GC</a> </h1>
+        <h1><div id="time"></div></h1></center>
+        
+    </body>
+</html>
