@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-      <title>Edt R&T</title>
+      <title>Edt GEII</title>
       <meta http-equiv="refresh" content="3600" >
       <meta charset='utf-8' />
       <link href='./lib/fullcalendar/main.min.css' rel='stylesheet' />
@@ -17,25 +17,26 @@
              var t = setTimeout(startTime, 60000);
          }
          var colors = {
-            0 : "FireBrick", 
-            1 : "#DA667B", 
-            2 : "green", 
-            3 : "DarkMagenta", 
+         	0 : "FireBrick", 
+         	1 : "#DA667B", 
+         	2 : "green", 
+         	3 : "DarkMagenta", 
          };
          var groups = [
-         	 { id: "01", ics: 'reseaux__telecom_rt1-fi-a1', title: 'RT1  A1'},
-         	 { id: "02", ics: 'reseaux__telecom_rt1-fi-a2', title: 'RT1  A2'},
-         	 { id: "03", ics: 'reseaux__telecom_rt1-fi-b1', title: 'RT1  B1' },
-         	 { id: "04", ics: 'reseaux__telecom_rt1-fi-b2', title: 'RT1  B2' },
+         	 { id: "01", ics: 'genie_electrique_fi12', title: '1FI12'},
+         	 { id: "02", ics: 'genie_electrique_fi21', title: '1FI21'},
+         	 { id: "03", ics: 'genie_electrique_fi22', title: '1FI22' },
          	
-         	{ id: "11", ics: 'reseaux__telecom_rt2-fi-a1', title: 'RT2  A1' },
-         	{ id: "12", ics: 'reseaux__telecom_rt2-fi-a2', title: 'RT2  A2' },
-         	{ id: "13", ics: 'reseaux__telecom_rt2-fi-b1', title: 'RT2  B1' },
+         	{ id: "11", ics: 'genie_electrique_2fi11', title: '2FI11' },
+         	{ id: "12", ics: 'genie_electrique_2fi12', title: '2FI12' },
+         	{ id: "13", ics: 'genie_electrique_2fi21', title: '2FI21' },
+         	{ id: "14", ics: 'genie_electrique_2fi22', title: '2FI22' },
          	
-         	{ id: "21", ics: 'reseaux__telecom_rt2-fa-a1', title: 'RT2  App' },
+         	{ id: "21", ics: 'genie_electrique_fa11', title: '1FA11' },
+         	{ id: "22", ics: 'genie_electrique_fa12', title: '1FA12' },
          	
-         	{ id: "31", ics: 'licence_pro_lp-rims-fi-a1', title: 'RIMS  A1' },
-         	{ id: "32", ics: 'licence_pro_lp-rims-fi-a1', title: 'RIMS  A2/Cpro' },
+         	{ id: "31", ics: 'genie_electrique_2fa11', title: '2FA11' },
+         	{ id: "32", ics: 'genie_electrique_2fa12', title: '2FA12' },
          ];
          document.addEventListener('DOMContentLoaded', function() {
          
@@ -238,7 +239,7 @@
    </head>
    <body onload="startTime()">
       <center>
-         <h2>Département R&T</h2>
+         <h2>Département GEII</h2>
          <h2>
             <div id="time"></div>
          </h2>
