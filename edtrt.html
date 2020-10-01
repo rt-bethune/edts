@@ -64,6 +64,7 @@
          		     slotMaxTime : "17:30:00",
          	  		  slotDuration: "00:15:00",
          	  	  	  slotLabelInterval: "01:00:00",
+
          			  expandRows: true,
          			  nowIndicator : true,
          			  slotLabelFormat: {
@@ -136,8 +137,20 @@
          						summary  = summary.replace("LPRIMS-FI-", "");
          						if(summary[0] == 'M')
          							{
-         								summary  = summary.split(" ")[0];
+                                 type  = summary.split("- ")[1];
+         								summary  = summary.split(" ")[0] + "-" + type;
          							}
+                           border = colors[  Math.floor(group['id'] / 10) ]
+                           if(type == "CM"){
+                              border = "black";
+                           }
+                           if(type == "TP"){
+                              border = "orange";
+                           }
+
+                           if(type == "TD"){
+                              border = "blue";
+                           }
          
          						events.push({
          							title:  "<h3>" + summary + "</h3><i class='fas fa-user'></i><i>" + description + "</i> <br><i class='fas fa-home'></i> <b>" + location + "</b> <br><br><i class='fas fa-hourglass-half'></i> " + duration ,
@@ -145,7 +158,7 @@
          							end: end,
          							resourceId: group['id'],
          							backgroundColor: colors[  Math.floor(group['id'] / 10) ],
-         							borderColor: colors[  Math.floor(group['id'] / 10) ]
+         							borderColor: border
          						})
          
          					}
@@ -231,6 +244,9 @@
 			display: table;
 			clear: both;
 		}
+      .fc-v-event {
+         border: 2px solid;
+      }
       </style>
    </head>
    <body onload="startTime()">

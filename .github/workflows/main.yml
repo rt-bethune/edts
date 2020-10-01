@@ -16,3 +16,14 @@ jobs:
 
       - name: Update groupes
         run: wget --timeout=3600 http://vtiutb.univ-artois.fr/icsetudiant/icsgroupe.php || true
+      
+      - name: Download ics
+        run: bash ./data/sync || true
+
+      - name: Archive ics files
+        uses: actions/upload-artifact@v2
+        with:
+          name: ics
+          path: |
+            calendars
+            !calendars/**/*.txt

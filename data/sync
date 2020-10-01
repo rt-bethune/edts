@@ -1,0 +1,8 @@
+#!/bin/bash
+mkdir ${BASH_SOURCE%/*}/../calendars/ -p
+cp  ${BASH_SOURCE%/*}/calendars.txt ${BASH_SOURCE%/*}/../calendars/
+echo "cp  ${BASH_SOURCE%/*}/calendars.txt ${BASH_SOURCE%/*}/../calendars/"
+cd ${BASH_SOURCE%/*}/../calendars/
+while read f; do
+	wget -N -S http://vtiutb.univ-artois.fr/icsetudiant/$f.ics
+done < calendars.txt
