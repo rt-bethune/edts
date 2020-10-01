@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Update etudiants
-        run: wget --timeout=3600 http://vtiutb.univ-artois.fr/icsetudiant/icsetudiant.php
+        run: wget --timeout=3600 http://vtiutb.univ-artois.fr/icsetudiant/icsetudiant.php || true
 
       - name: Update groupes
-        run: wget --timeout=3600 http://vtiutb.univ-artois.fr/icsetudiant/groupe.php
+        run: wget --timeout=3600 http://vtiutb.univ-artois.fr/icsetudiant/icsgroupe.php || true
