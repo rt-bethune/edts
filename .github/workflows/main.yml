@@ -1,0 +1,18 @@
+name: update ics
+
+on:
+  schedule:
+    - cron:  '*/30 * * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Update etudiants
+        run: wget --timeout=3600 http://vtiutb.univ-artois.fr/icsetudiant/icsetudiant.php
+
+      - name: Update groupes
+        run: wget --timeout=3600 http://vtiutb.univ-artois.fr/icsetudiant/groupe.php
