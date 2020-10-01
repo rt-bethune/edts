@@ -43,28 +43,24 @@
                  var calendar = new FullCalendar.Calendar(calendarEl, {
                    initialView: 'resourceTimeGridDay', 
                    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source', 
-                   headerToolbar: {  }, // buttons for switching between views
+                   headerToolbar: {  }, 
                    locale: "fr",
-                   headerToolbar: {
-         			  start: '', center: '', end: ''
-         		  }, 
-         		        height: 'auto', 
-         
-                    businessHours: [ // specify an array instead
-         				{
-         					daysOfWeek: [ 1, 2, 3, 4, 5, 6 ],
-         					start: '07:00',
-         					end: '12:00' 
-         				},
-         				{
-         					daysOfWeek: [ 1, 2, 3, 4, 5, 6 ],
-         					start: '13:00', 
-         					end: '17:30' 
-         				}
-         		    ],
-         			 
-         		      slotMinTime : "08:00:00",
-         		      slotMaxTime : "17:30:00",
+                   headerToolbar: { start: '', center: '', end: '' }, 
+         		    height: 'auto', 
+         			 businessHours: [ // specify an array instead
+                     {
+                        daysOfWeek: [ 1, 2, 3, 4, 5, 6 ],
+                        startTime: '08:00:00',
+                        endTime: '12:00' 
+                     },
+                     {
+                        daysOfWeek: [ 1, 2, 3, 4, 5, 6 ],
+                        startTime: '13:00', 
+                        endTime: '17:30' 
+                     }
+                   ],
+         		     slotMinTime : "08:00:00",
+         		     slotMaxTime : "17:30:00",
          	  		  slotDuration: "00:15:00",
          	  	  	  slotLabelInterval: "01:00:00",
          			  expandRows: true,
