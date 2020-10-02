@@ -137,7 +137,7 @@
          						summary  = summary.replace("LPRIMS-FI-", "");
          						if(summary[0] == 'M')
          							{
-                                 type  = summary.split("- ")[1];
+                                 		type  = summary.split("- ")[summary.split("- ").length -1];
          								summary  = summary.split(" ")[0] + "-" + type;
          							}
                            border = colors[  Math.floor(group['id'] / 10) ]
