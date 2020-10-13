@@ -1,177 +1,178 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <title>Edt GEII</title>
-      <meta http-equiv="refresh" content="3600" >
-      <meta charset='utf-8' />
-      <link href='./lib/fullcalendar/main.min.css' rel='stylesheet' />
-      <script src='./lib/fullcalendar/main.min.js'></script>
-      <script src='./lib/fullcalendar/locales/fr.js'></script>
-      <script src='./lib/moment.min.js'></script>
-      <script src='./lib/jquery.min.js'></script>
-      <script src='./lib/ical.min.js'></script>
-      <script type="text/javascript">
-         function startTime() {
-             moment.locale('fr');
-             document.getElementById('time').innerHTML = moment().format('LLLL');
-             var t = setTimeout(startTime, 60000);
-         }
-         var colors = {
-         	0 : "FireBrick", 
-         	1 : "#DA667B", 
-         	2 : "green", 
-         	3 : "DarkMagenta", 
-         };
-         var groups = [
-         	 { id: "01", ics: 'genie_electrique_fi12', title: '1FI12'},
-         	 { id: "02", ics: 'genie_electrique_fi21', title: '1FI21'},
-         	 { id: "03", ics: 'genie_electrique_fi22', title: '1FI22' },
-         	
-         	{ id: "11", ics: 'genie_electrique_2fi11', title: '2FI11' },
-         	{ id: "12", ics: 'genie_electrique_2fi12', title: '2FI12' },
-         	{ id: "13", ics: 'genie_electrique_2fi21', title: '2FI21' },
-         	{ id: "14", ics: 'genie_electrique_2fi22', title: '2FI22' },
-         	
-         	{ id: "21", ics: 'genie_electrique_fa11', title: '1FA11' },
-         	{ id: "22", ics: 'genie_electrique_fa12', title: '1FA12' },
-         	
-         	{ id: "31", ics: 'genie_electrique_2fa11', title: '2FA11' },
-         	{ id: "32", ics: 'genie_electrique_2fa12', title: '2FA12' },
-         ];
-         document.addEventListener('DOMContentLoaded', function() {
-         
-                 var calendarEl = document.getElementById('calendar');
-                 var calendar = new FullCalendar.Calendar(calendarEl, {
-                   initialView: 'resourceTimeGridDay', 
-                   schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source', 
-                   headerToolbar: {  }, // buttons for switching between views
-                   locale: "fr",
-                   headerToolbar: {
-         			  start: '', center: '', end: ''
-         		  }, 
-         		        height: 'auto', 
-         
-                    businessHours: [ // specify an array instead
-         				{
-         					daysOfWeek: [ 1, 2, 3, 4, 5, 6 ],
-         					startTime: '08:00:00',
-         					endTime: '12:00' 
-         				},
-         				{
-         					daysOfWeek: [ 1, 2, 3, 4, 5, 6 ],
-         					startTime: '13:30', 
-         					endTime: '17:30' 
-         				}
-         		    ],
-         			 
-         		      slotMinTime : "08:00:00",
-         		      slotMaxTime : "17:30:00",
-         	  		  slotDuration: "00:15:00",
-         	  	  	  slotLabelInterval: "01:00:00",
-         			  expandRows: true,
-         			  nowIndicator : true,
-         			  slotLabelFormat: {
-         				  hour: '2-digit',
-         				  minute: '2-digit',
-         				  omitZeroMinute: false,
-         				},
-         		  	   eventContent: function(arg) {
-         				  let element = document.createElement('div')
-         				  element.innerHTML = arg.event.title;
-         				  
-         				  let arrayOfDomNodes = [ element ]
-         				  return { domNodes: arrayOfDomNodes }
-         				},
-         		  		allDaySlot: false,
-         		  
-         		  		resources: groups
-         
-                 });
-                 calendar.render();
-         
-         
-              
-         var events = [];	
-         groups.forEach(function(group){
-         		$.get('https://cors-anywhere.herokuapp.com/'+'http://vtiutb.univ-artois.fr/icsetudiant/' + group['ics'] + ".ics", function (res) {
-         			events = [];
-         			var parsed = ICAL.parse(res);
-         			parsed[2].forEach(function(event) {
-         				if (event[0] !== 'vevent') return
-         				var summary, location, start, end, description, duration;
-         				event[1].forEach(function(event_item){
-         					switch(event_item[0]){
-         					case 'location':
-         						location = event_item[3]
-         						break;
-         					case 'description':
-         						description = event_item[3]
-         						data = description.split('\n');
-         						description =     ( (data[1] == null || data[1] === "")? "" : (data[1].split(':')[1] + "<br>") ) ;
-         						duration =			 ( (data[2] == null)? "" : (data[2].split(':')[1] + "<br>") )
-         										+ ( (data[3] == null)? "" : (data[3].split(':')[1] + "<br>") )
-         
-         						break;
-         					case 'summary':
-         						summary = event_item[3]
-         						data = summary.split('_');
-         						summary = (data[1] == null)?summary:(data[1] + " " + data[2]);
-         						break;
-         					case 'dtstart':
-         						start = event_item[3];
-         						starttime = new Date(start);
-         						start = starttime;
-         						break;
-         					case 'dtend':
-         						end = event_item[3];
-         						endtime = new Date(end);
-         						end = endtime;
-         						break;
-         					}
-         				})
-         				if (summary && start && end) {
-         					
-         					var todaysDate = new Date();
-         					var isToday = (todaysDate.toDateString() == start.toDateString());
-         					if(isToday) {
-         							
-         						summary  = summary.replace("RT-FI-", "");
-         						summary  = summary.replace("RT-FA-", "");
-         						summary  = summary.replace("LPRIMS-FI-", "");
-         						if(summary[0] == 'M')
-         							{
-         								summary  = summary.split(" ")[0];
-         							}
-         
-         						events.push({
-         							title:  "<h4>" + summary + "</h4>" + description + " " + location + " " + duration ,
-         							start: start,
-         							end: end,
-         							resourceId: group['id'],
-         							backgroundColor: colors[  Math.floor(group['id'] / 10) ],
-         							borderColor: colors[  Math.floor(group['id'] / 10) ]
-         						})
-         
-         					}
-         				}
-         				
-         			});
-         
-         		}).done(function() {
-         			calendar.addEventSource( events );
-         		});
-         			       
-         
-         	});
-         	
-         
-             
-         	
-          });
-         
-      </script>
-      <style>
-         body {
+
+<head>
+	<title>Edt GEII</title>
+	<meta http-equiv="refresh" content="3600">
+	<meta charset='utf-8' />
+	<link href='./lib/fullcalendar/main.min.css' rel='stylesheet' />
+	<script src='./lib/fullcalendar/main.min.js'></script>
+	<script src='./lib/fullcalendar/locales/fr.js'></script>
+	<script src='./lib/moment.min.js'></script>
+	<script src='./lib/jquery.min.js'></script>
+	<script src='./lib/ical.min.js'></script>
+	<script type="text/javascript">
+		function startTime() {
+			moment.locale('fr');
+			document.getElementById('time').innerHTML = moment().format('LLLL');
+			var t = setTimeout(startTime, 60000);
+		}
+		var colors = {
+			0: "FireBrick",
+			1: "#DA667B",
+			2: "green",
+			3: "DarkMagenta",
+		};
+		var groups = [
+			{ id: "00", ics: 'genie_electrique_fi11', title: '1FI11' },
+			{ id: "01", ics: 'genie_electrique_fi12', title: '1FI12' },
+			{ id: "02", ics: 'genie_electrique_fi21', title: '1FI21' },
+			{ id: "03", ics: 'genie_electrique_fi22', title: '1FI22' },
+
+			{ id: "11", ics: 'genie_electrique_2fi11', title: '2FI11' },
+			{ id: "12", ics: 'genie_electrique_2fi12', title: '2FI12' },
+			{ id: "13", ics: 'genie_electrique_2fi21', title: '2FI21' },
+			{ id: "14", ics: 'genie_electrique_2fi22', title: '2FI22' },
+
+			{ id: "21", ics: 'genie_electrique_fa11', title: '1FA11' },
+			{ id: "22", ics: 'genie_electrique_fa12', title: '1FA12' },
+
+			{ id: "31", ics: 'genie_electrique_2fa11', title: '2FA11' },
+			{ id: "32", ics: 'genie_electrique_2fa12', title: '2FA12' },
+		];
+		document.addEventListener('DOMContentLoaded', function () {
+
+			var calendarEl = document.getElementById('calendar');
+			var calendar = new FullCalendar.Calendar(calendarEl, {
+				initialView: 'resourceTimeGridDay',
+				schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+				headerToolbar: {}, // buttons for switching between views
+				locale: "fr",
+				headerToolbar: {
+					start: '', center: '', end: ''
+				},
+				height: 'auto',
+
+				businessHours: [ // specify an array instead
+					{
+						daysOfWeek: [1, 2, 3, 4, 5, 6],
+						startTime: '08:00:00',
+						endTime: '12:00'
+					},
+					{
+						daysOfWeek: [1, 2, 3, 4, 5, 6],
+						startTime: '13:30',
+						endTime: '17:30'
+					}
+				],
+
+				slotMinTime: "08:00:00",
+				slotMaxTime: "17:30:00",
+				slotDuration: "00:15:00",
+				slotLabelInterval: "01:00:00",
+				expandRows: true,
+				nowIndicator: true,
+				slotLabelFormat: {
+					hour: '2-digit',
+					minute: '2-digit',
+					omitZeroMinute: false,
+				},
+				eventContent: function (arg) {
+					let element = document.createElement('div')
+					element.innerHTML = arg.event.title;
+
+					let arrayOfDomNodes = [element]
+					return { domNodes: arrayOfDomNodes }
+				},
+				allDaySlot: false,
+
+				resources: groups
+
+			});
+			calendar.render();
+
+
+
+			var events = [];
+			groups.forEach(function (group) {
+				$.get('https://cors-anywhere.herokuapp.com/' + 'http://vtiutb.univ-artois.fr/icsetudiant/' + group['ics'] + ".ics", function (res) {
+					events = [];
+					var parsed = ICAL.parse(res);
+					parsed[2].forEach(function (event) {
+						if (event[0] !== 'vevent') return
+						var summary, location, start, end, description, duration;
+						event[1].forEach(function (event_item) {
+							switch (event_item[0]) {
+								case 'location':
+									location = event_item[3]
+									break;
+								case 'description':
+									description = event_item[3]
+									data = description.split('\n');
+									description = ((data[1] == null || data[1] === "") ? "" : (data[1].split(':')[1] + "<br>"));
+									duration = ((data[2] == null) ? "" : (data[2].split(':')[1] + "<br>"))
+										+ ((data[3] == null) ? "" : (data[3].split(':')[1] + "<br>"))
+
+									break;
+								case 'summary':
+									summary = event_item[3]
+									data = summary.split('_');
+									summary = (data[1] == null) ? summary : (data[1] + " " + data[2]);
+									break;
+								case 'dtstart':
+									start = event_item[3];
+									starttime = new Date(start);
+									start = starttime;
+									break;
+								case 'dtend':
+									end = event_item[3];
+									endtime = new Date(end);
+									end = endtime;
+									break;
+							}
+						})
+						if (summary && start && end) {
+
+							var todaysDate = new Date();
+							var isToday = (todaysDate.toDateString() == start.toDateString());
+							if (isToday) {
+
+								summary = summary.replace("RT-FI-", "");
+								summary = summary.replace("RT-FA-", "");
+								summary = summary.replace("LPRIMS-FI-", "");
+								if (summary[0] == 'M') {
+									summary = summary.split(" ")[0];
+								}
+
+								events.push({
+									title: "<h4>" + summary + "</h4>" + description + " " + location + " " + duration,
+									start: start,
+									end: end,
+									resourceId: group['id'],
+									backgroundColor: colors[Math.floor(group['id'] / 10)],
+									borderColor: colors[Math.floor(group['id'] / 10)]
+								})
+
+							}
+						}
+
+					});
+
+				}).done(function () {
+					calendar.addEventSource(events);
+				});
+
+
+			});
+
+
+
+
+		});
+
+	</script>
+	<style>
+		body {
 			padding: 0;
 			font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
 			font-size: 14px;
@@ -235,16 +236,18 @@
 			display: table;
 			clear: both;
 		}
-      </style>
-   </head>
-   <body onload="startTime()">
-      <center>
-         <h2>Département GEII</h2>
-         <h2>
-            <div id="time"></div>
-         </h2>
-      </center>
-      <div id='calendar'></div>
-      </div>
-   </body>
+	</style>
+</head>
+
+<body onload="startTime()">
+	<center>
+		<h2>Département GEII</h2>
+		<h2>
+			<div id="time"></div>
+		</h2>
+	</center>
+	<div id='calendar'></div>
+	</div>
+</body>
+
 </html>
