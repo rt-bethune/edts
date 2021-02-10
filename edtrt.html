@@ -36,7 +36,7 @@
 
 			{ id: "21", ics: 'reseaux__telecom_rt2-fa-a1', title: 'RT2  App' },
 
-			{ id: "31", ics: 'licence_pro_lp-rims-fa-a1', title: 'RIMS  A1' },
+			{ id: "31", ics: 'licence_pro_lp-rims-fi-a1', title: 'RIMS  A1' },
 			{ id: "32", ics: 'licence_pro_lp-rims-fi-a2', title: 'RIMS  A2/Cpro' },
 		];
 		document.addEventListener('DOMContentLoaded', function () {
@@ -127,7 +127,7 @@
 									break;
 							}
 						})
-						if (summary && start && end) {
+						if (summary && description && start && end) {
 
 							var todaysDate = new Date();
 							var isToday = (todaysDate.toDateString() == start.toDateString());
@@ -151,9 +151,15 @@
 								if (type == "TD") {
 									border = "blue";
 								}
+								display = 'block';
+								if(duration.includes("visio") 
+									|| duration.includes("distanciel") ){
+									display = 'background';
+								}
 
 								events.push({
 									title: "<h3>" + summary + "</h3><i class='fas fa-user'></i><i>" + description + "</i> <br><i class='fas fa-home'></i> <b>" + location + "</b> <br><br><i class='fas fa-hourglass-half'></i> " + duration,
+									display: display,
 									start: start,
 									end: end,
 									resourceId: group['id'],

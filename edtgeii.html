@@ -3,14 +3,15 @@
 <head>
 	<title>Edt GEII</title>
 	<meta http-equiv="refresh" content="3600">
-	<meta charset='utf-8' />
-	<link href='./lib/fullcalendar/main.min.css' rel='stylesheet' />
-	<script src='./lib/fullcalendar/main.min.js'></script>
-	<script src='./lib/fullcalendar/locales/fr.js'></script>
-	<script src='./lib/moment.min.js'></script>
-	<script src='./lib/jquery.min.js'></script>
-	<script src='./lib/ical.min.js'></script>
-	<script type="text/javascript">
+   <meta charset='utf-8' />
+   <link href='./lib/fullcalendar/main.min.css' rel='stylesheet' />
+   <link href="./lib/fontawesome/css/all.css" rel="stylesheet">
+   <script src='./lib/fullcalendar/main.min.js'></script>
+   <script src='./lib/fullcalendar/locales/fr.js'></script>
+   <script src='./lib/moment.min.js'></script>
+   <script src='./lib/jquery.min.js'></script>
+   <script src='./lib/ical.min.js'></script>
+   <script type="text/javascript">
 		function startTime() {
 			moment.locale('fr');
 			document.getElementById('time').innerHTML = moment().format('LLLL');
@@ -142,14 +143,25 @@
 								if (summary[0] == 'M') {
 									summary = summary.split(" ")[0];
 								}
+                        border = colors[Math.floor(group['id'] / 10)]
+                        if (summary.includes("CM")) {
+                           border = "black";
+                        }
+                        if (summary.includes("TP")) {
+                           border = "orange";
+                        }
+
+                        if (summary.includes("TD")) {
+                           border = "blue";
+                        }
 
 								events.push({
-									title: "<h4>" + summary + "</h4>" + description + " " + location + " " + duration,
+                           title: "<h3>" + summary + "</h3><i class='fas fa-user'></i><i>" + description + "</i> <br><i class='fas fa-home'></i> <b>" + location + "</b> <br><br><i class='fas fa-hourglass-half'></i> " + duration,
 									start: start,
 									end: end,
 									resourceId: group['id'],
 									backgroundColor: colors[Math.floor(group['id'] / 10)],
-									borderColor: colors[Math.floor(group['id'] / 10)]
+                           borderColor: border
 								})
 
 							}
@@ -230,11 +242,15 @@
 
 		/* Clear floats after the columns */
 
-		.row:after {
-			content: "";
-			display: table;
-			clear: both;
-		}
+      .row:after {
+         content: "";
+         display: table;
+         clear: both;
+      }
+
+      .fc-v-event {
+         border: 2px solid;
+      }
 	</style>
 </head>
 
