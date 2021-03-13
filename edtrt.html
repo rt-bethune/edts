@@ -47,7 +47,7 @@
 				schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
 				headerToolbar: {},
 				locale: "fr",
-				headerToolbar: { start: '', center: '', end: '' },
+				//headerToolbar: { start: '', center: '', end: '' },
 				height: 'auto',
 				businessHours: [ // specify an array instead
 					{
@@ -130,17 +130,18 @@
 						if (summary && description && start && end) {
 
 							var todaysDate = new Date();
-							var isToday = (todaysDate.toDateString() == start.toDateString());
+							var isToday = true; //(todaysDate.toDateString() == start.toDateString());
 							if (isToday) {
 
 								summary = summary.replace("RT-FI-", "");
 								summary = summary.replace("RT-FA-", "");
 								summary = summary.replace("LPRIMS-FI-", "");
+								type = "CM";
 								if (summary[0] == 'M') {
 									type = summary.split("- ")[summary.split("- ").length - 1];
 									summary = summary.split(" ")[0] + "-" + type;
 								}
-								border = colors[Math.floor(group['id'] / 10)]
+								border = colors[Math.floor(group['id'] / 10)]; 
 								if (type == "CM") {
 									border = "black";
 								}
