@@ -23,20 +23,31 @@
 			1: "#DA667B",
 			2: "green",
 			3: "DarkMagenta",
+			4: "Blue",
 		};
 		var groups = [
-			{ id: "01", ics: 'reseaux__telecom_rt1-fi-a1', title: 'RT1  A1' },
-			{ id: "02", ics: 'reseaux__telecom_rt1-fi-a2', title: 'RT1  A2' },
-			{ id: "03", ics: 'reseaux__telecom_rt1-fi-b1', title: 'RT1  B1' },
-			{ id: "04", ics: 'reseaux__telecom_rt1-fi-b2', title: 'RT1  B2' },
+			{ id: "00", ics: 'genie_civil_ga1', title: 'GC1-GA1' },
+			{ id: "01", ics: 'genie_civil_ga2', title: 'GC1-GA2' },
+			{ id: "10", ics: 'genie_civil_gb1', title: 'GC1-GB1' },
+			{ id: "11", ics: 'genie_civil_gb2', title: 'GC1-GB2' },
+			{ id: "20", ics: 'genie_civil_gc1', title: 'GC1-GC1' },
+			{ id: "21", ics: 'genie_civil_gc2', title: 'GC1-GC2' },
+			{ id: "30", ics: 'genie_civil_gd1', title: 'GC1-GD1' },
+			{ id: "31", ics: 'genie_civil_gd2', title: 'GC1-GD2' },
+			{ id: "40", ics: 'genie_civil_ge1', title: 'GC1-GD1' },
+			{ id: "41", ics: 'genie_civil_ge2', title: 'GC1-GD2' }
+		];
 
-			{ id: "11", ics: 'reseaux__telecom_rt2-fi-a1', title: 'RT2  A1' },
-			{ id: "12", ics: 'reseaux__telecom_rt2-fi-a2', title: 'RT2  A2' },
-
-			{ id: "21", ics: 'reseaux__telecom_rt2-fa-a1', title: 'RT2A A1' },
-			{ id: "22", ics: 'reseaux__telecom_rt2-fa-a2', title: 'RT2A A2' },
-
-			{ id: "31", ics: 'licence_pro_lp-rims-fi-a1', title: 'RIMS' },
+		var groups2 = [
+			{ id: "00", ics: 'genie_civil_gc2ga1', title: 'GC2-GA1' },
+			{ id: "01", ics: 'genie_civil_gc2ga2', title: 'GC2-GA2' },
+			{ id: "10", ics: 'genie_civil_gc2gb1', title: 'GC2-GB1' },
+			{ id: "11", ics: 'genie_civil_gc2gb2', title: 'GC2-GB2' },
+			{ id: "20", ics: 'genie_civil_gc2gc1', title: 'GC2-GC1' },
+			{ id: "21", ics: 'genie_civil_gc2gc2', title: 'GC2-GC2' },
+			{ id: "30", ics: 'genie_civil_gc2gd1', title: 'GC2-GD1' },
+			{ id: "31", ics: 'genie_civil_gc2gd2', title: 'GC2-GD2' },
+			{ id: "40", ics: 'genie_civil_as',     title: 'GC-AS1' },
 		];
 		document.addEventListener('DOMContentLoaded', function () {
 
@@ -46,7 +57,7 @@
 				schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
 				headerToolbar: {},
 				locale: "fr",
-				//headerToolbar: { start: '', center: '', end: '' },
+				headerToolbar: { start: '', center: '', end: '' },
 				height: 'auto',
 				businessHours: [ // specify an array instead
 					{
@@ -62,7 +73,7 @@
 				],
 				slotMinTime: "08:00:00",
 				slotMaxTime: "17:30:00",
-				slotDuration: "00:15:00",
+				slotDuration: "00:30:00",
 				slotLabelInterval: "01:00:00",
 
 				expandRows: true,
@@ -87,6 +98,51 @@
 			calendar.render();
 
 
+			var calendar2El = document.getElementById('calendar2');
+			var calendar2 = new FullCalendar.Calendar(calendar2El, {
+				initialView: 'resourceTimeGridDay',
+				schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+				headerToolbar: {},
+				locale: "fr",
+				headerToolbar: { start: '', center: '', end: '' },
+				height: 'auto',
+				businessHours: [ // specify an array instead
+					{
+						daysOfWeek: [1, 2, 3, 4, 5, 6],
+						startTime: '08:00:00',
+						endTime: '12:00'
+					},
+					{
+						daysOfWeek: [1, 2, 3, 4, 5, 6],
+						startTime: '13:00',
+						endTime: '17:30'
+					}
+				],
+				slotMinTime: "08:00:00",
+				slotMaxTime: "17:30:00",
+				slotDuration: "00:30:00",
+				slotLabelInterval: "01:00:00",
+
+				expandRows: true,
+				nowIndicator: true,
+				slotLabelFormat: {
+					hour: '2-digit',
+					minute: '2-digit',
+					omitZeroMinute: false,
+				},
+				eventContent: function (arg) {
+					let element = document.createElement('div')
+					element.innerHTML = arg.event.title;
+
+					let arrayOfDomNodes = [element]
+					return { domNodes: arrayOfDomNodes }
+				},
+				allDaySlot: false,
+
+				resources: groups2
+
+			});
+			calendar2.render();
 
 			var events = [];
 			groups.forEach(function (group) {
@@ -179,6 +235,97 @@
 
 			});
 
+			var events2 = [];
+			groups2.forEach(function (group) {
+               $.get('https://cors-anywhere-rt-bethune.herokuapp.com/'+'http://vtiutb.univ-artois.fr/icsetudiant/' + group['ics'] + ".ics", function (res) {
+					events2 = [];
+					var parsed = ICAL.parse(res);
+					parsed[2].forEach(function (event) {
+						if (event[0] !== 'vevent') return
+						var summary, location, start, end, description, duration;
+						event[1].forEach(function (event_item) {
+							switch (event_item[0]) {
+								case 'location':
+									location = event_item[3]
+									break;
+								case 'description':
+									description = event_item[3]
+									data = description.split('\n');
+									description = ((data[1] == null || data[1] === "") ? "" : (data[1].split(':')[1] + "<br>"));
+									duration = ((data[2] == null) ? "" : (data[2].split(':')[1] + "<br>"))
+										+ ((data[3] == null) ? "" : (data[3].split(':')[1] + "<br>"))
+
+									break;
+								case 'summary':
+									summary = event_item[3]
+									data = summary.split('_');
+									summary = (data[1] == null) ? summary : (data[1] + " " + data[2]);
+									break;
+								case 'dtstart':
+									start = event_item[3];
+									starttime = new Date(start);
+									start = starttime;
+									break;
+								case 'dtend':
+									end = event_item[3];
+									endtime = new Date(end);
+									end = endtime;
+									break;
+							}
+						})
+						if (summary && description && start && end) {
+
+							var todaysDate = new Date();
+							var isToday = true; //(todaysDate.toDateString() == start.toDateString());
+							if (isToday) {
+
+								summary = summary.replace("RT-FI-", "");
+								summary = summary.replace("RT-FA-", "");
+								summary = summary.replace("LPRIMS-FI-", "");
+								type = "CM";
+								if (summary[0] == 'M') {
+									type = summary.split("- ")[summary.split("- ").length - 1];
+									summary = summary.split(" ")[0] + "-" + type;
+								}
+								border = colors[Math.floor(group['id'] / 10)]; 
+								if (type == "CM") {
+									border = "black";
+								}
+								if (type == "TP") {
+									border = "orange";
+								}
+
+								if (type == "TD") {
+									border = "blue";
+								}
+								display = 'block';
+								if(duration.includes("visio") 
+									|| duration.includes("distanciel") ){
+									display = 'background';
+								}
+
+								events2.push({
+									title: "<h3>" + summary + "</h3><i class='fas fa-user'></i><i>" + description + "</i> <br><i class='fas fa-home'></i> <b>" + location + "</b> <br><br><i class='fas fa-hourglass-half'></i> " + duration,
+									display: display,
+									start: start,
+									end: end,
+									resourceId: group['id'],
+									backgroundColor: colors[Math.floor(group['id'] / 10)],
+									borderColor: border
+								})
+
+							}
+						}
+
+					});
+
+				}).done(function () {
+					calendar2.addEventSource(events2);
+				});
+
+
+			});
+
 
 
 
@@ -200,6 +347,15 @@
 			margin: 0 auto;
 		}
 
+		
+
+		#calendar2,
+		header,
+		h1,
+		footer {
+			margin: 0 auto;
+		}
+
 		h3 {
 			font-size: 1.5em;
 			margin-bottom: 5px;
@@ -214,9 +370,9 @@
 			margin-bottom: -20px;
 		}
 
-		#calendar {
-			margin-bottom: -50px;
-		}
+		
+
+		
 
 		.fc-event {
 			font-size: .95em;
@@ -260,11 +416,12 @@
 
 <body onload="startTime()">
 	<center>
-		<h2>Département R&T</h2>
+		<h2>Département GCCD</h2>
 		<h2>
 			<div id="time"></div>
 		</h2>
 	</center>
+	<div id='calendar2'></div>
 	<div id='calendar'></div>
 	</div>
 </body>
