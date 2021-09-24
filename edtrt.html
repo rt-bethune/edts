@@ -136,7 +136,7 @@
 								summary = summary.replace("RT-FA-", "");
 								summary = summary.replace("LPRIMS-FI-", "");
 								type = "CM";
-								if (summary[0] == 'M') {
+								if (summary[0] == 'M' || summary[0] == 'R') {
 									type = summary.split("- ")[summary.split("- ").length - 1];
 									summary = summary.split(" ")[0] + "-" + type;
 								}
