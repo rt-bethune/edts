@@ -139,6 +139,7 @@
 								if (summary[0] == 'M' || summary[0] == 'R') {
 									type = summary.split("- ")[summary.split("- ").length - 1];
 									summary = summary.split(" ")[0] + "-" + type;
+									description = description.split(".")[0]
 								}
 								border = colors[Math.floor(group['id'] / 10)]; 
 								if (type == "CM") {
