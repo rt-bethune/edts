@@ -136,7 +136,7 @@
 								summary = summary.replace("RT-FA-", "");
 								summary = summary.replace("LPRIMS-FI-", "");
 								type = "CM";
-								if (summary[0] == 'M' || summary[0] == 'R') {
+								if (summary[0] == 'M' || summary[0] == 'R' || summary.includes("SAE")) {
 									type = summary.split("- ")[summary.split("- ").length - 1];
 									summary = summary.split(" ")[0] + "-" + type;
 								}
@@ -145,6 +145,7 @@
 									summary = summary.split("-")[1]
 									summary = summary.split(" ")[0] + "-" + type;
 								}
+								
 								description = description.split(".")[0]
 								border = colors[Math.floor(group['id'] / 10)]; 
 								if (type == "CM") {
