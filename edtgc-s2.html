@@ -186,29 +186,21 @@
 							var isToday = true; //(todaysDate.toDateString() == start.toDateString());
 							if (isToday) {
 
-								summary = summary.replace("RT-FI-", "");
-								summary = summary.replace("RT-FA-", "");
-								summary = summary.replace("LPRIMS-FI-", "");
-								type = "CM";
-								if (summary[0] == 'M') {
-									type = summary.split("- ")[summary.split("- ").length - 1];
-									summary = summary.split(" ")[0] + "-" + type;
-								}
+								
+								type = " ";
 								border = colors[Math.floor(group['id'] / 10)]; 
-								if (type == "CM") {
-									border = "black";
-								}
-								if (type == "TP") {
-									border = "orange";
-								}
-
-								if (type == "TD") {
-									border = "blue";
-								}
+								if(summary.includes("TD")) {type = "TD"; border="black";}
+								if(summary.includes("TP")) {type = "TP"; border="orange";}
+								if(summary.includes("CM")) {type = "CM"; border="blue";}
+								
 								display = 'block';
 								if(duration.includes("visio") 
 									|| duration.includes("distanciel") ){
 									display = 'background';
+								}
+								summary = type;
+								if(description.includes(".")){
+									description = description.split(".")[0];
 								}
 
 								events.push({
@@ -277,29 +269,21 @@
 							var isToday = true; //(todaysDate.toDateString() == start.toDateString());
 							if (isToday) {
 
-								summary = summary.replace("RT-FI-", "");
-								summary = summary.replace("RT-FA-", "");
-								summary = summary.replace("LPRIMS-FI-", "");
-								type = "CM";
-								if (summary[0] == 'M') {
-									type = summary.split("- ")[summary.split("- ").length - 1];
-									summary = summary.split(" ")[0] + "-" + type;
-								}
+								type = " ";
 								border = colors[Math.floor(group['id'] / 10)]; 
-								if (type == "CM") {
-									border = "black";
-								}
-								if (type == "TP") {
-									border = "orange";
-								}
-
-								if (type == "TD") {
-									border = "blue";
-								}
+								if(summary.includes("TD")) {type = "TD"; border="black";}
+								if(summary.includes("TP")) {type = "TP"; border="orange";}
+								if(summary.includes("CM")) {type = "CM"; border="blue";}
+								
+								
 								display = 'block';
 								if(duration.includes("visio") 
 									|| duration.includes("distanciel") ){
 									display = 'background';
+								}
+								summary = type;
+								if(description.includes(".")){
+									description = description.split(".")[0];
 								}
 
 								events2.push({
