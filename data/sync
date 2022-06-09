@@ -1,4 +1,5 @@
 #!/bin/bash
+
 mkdir ${BASH_SOURCE%/*}/../calendars/ -p
 cp  ${BASH_SOURCE%/*}/calendars.txt ${BASH_SOURCE%/*}/../calendars/
 echo "cp  ${BASH_SOURCE%/*}/calendars.txt ${BASH_SOURCE%/*}/../calendars/"
