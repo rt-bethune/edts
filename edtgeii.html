@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title>Edt GEII</title>
-	<meta http-equiv="refresh" content="3600">
+	<meta http-equiv="refresh" content="10800">
    <meta charset='utf-8' />
    <link href='./lib/fullcalendar/main.min.css' rel='stylesheet' />
    <link href="./lib/fontawesome/css/all.css" rel="stylesheet">
@@ -95,7 +95,7 @@
 
 			var events = [];
 			groups.forEach(function (group) {
-               $.get('https://cors-anywhere-rt-bethune.herokuapp.com/'+'http://vtiutb.univ-artois.fr/icsetudiant/' + group['ics'] + ".ics", function (res) {
+				$.get('https://proxy-kljaikwzfq-uc.a.run.app/'+'http://vtiutb.univ-artois.fr/icsetudiant/' + group['ics'] + ".ics", function (res) {
 					events = [];
 					var parsed = ICAL.parse(res);
 					parsed[2].forEach(function (event) {
