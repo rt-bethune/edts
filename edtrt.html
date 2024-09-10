@@ -25,19 +25,22 @@
 			3: "DarkMagenta",
 		};
 		var groups = [
-			{ id: "01", ics: 'reseaux__telecom_rt1-fi-a1', title: 'RT1  A1' },
-			{ id: "02", ics: 'reseaux__telecom_rt1-fi-a2', title: 'RT1  A2' },
-			{ id: "03", ics: 'reseaux__telecom_rt1-fi-b1', title: 'RT1  B1' },
-			{ id: "04", ics: 'reseaux__telecom_rt1-fi-b2', title: 'RT1  B2' },
+			{ id: "01", ics: 'rynAe1nw', title: 'RT1  A1' },
+			{ id: "02", ics: 'oKYNPNWv', title: 'RT1  A2' },
+			{ id: "03", ics: 'zV3LM9YA', title: 'RT1  B1' },
+			{ id: "04", ics: '2XnmyPnr', title: 'RT1  B2' },
 
-			{ id: "11", ics: 'reseaux_telecom_rt2-fi-a1-cyber', title: 'RT2  CYBER' },
-			{ id: "12", ics: 'reseaux_telecom_rt2-fi-a1-rom',   title: 'RT2  ROM' },
+			{ id: "11", ics: '7rY6DMWz', title: 'RT2  A1' },
+			{ id: "12", ics: 'ebWKVvna', title: 'RT2  A2' },
+			{ id: "13", ics: 'jLW1GzYa', title: 'RT2  A3' },
+			
 
-			{ id: "21", ics: 'rt_rt2-fa-a1', title: 'RT2A' },
+			{ id: "21", ics: 'PwWxk2n9', title: 'RT2A' },
 
-			{ id: "31", ics: 'reseaux_telecom_rt3-fi-a1-cyber', title: 'RT3  CYBER' },
-			{ id: "32", ics: 'rt_rt3-fa-a1',   title: 'RT3A  A1' },
-			{ id: "33", ics: 'rt_rt3-fa-a2',   title: 'RT3A  A2' },
+			{ id: "31", ics: 'PwWxMe39', title: 'RT3  CYBER' },
+			{ id: "32", ics: 'bE3pXG3A', title: 'RT3  ROM' },
+			{ id: "33", ics: 'VOnEydnr',   title: 'RT3A  A1' },
+			{ id: "34", ics: 'V9n9qRnP',   title: 'RT3A  A2' },
 		];
 		document.addEventListener('DOMContentLoaded', function () {
 
@@ -91,9 +94,10 @@
 
 			var events = [];
 			groups.forEach(function (group) {
-               $.get('https://proxy-kljaikwzfq-uc.a.run.app/'+'http://vtiutb.univ-artois.fr/icsetudiant/' + group['ics'] + ".ics", function (res) {
+               $.get('https://ade-consult.univ-artois.fr/jsp/custom/modules/plannings/' + group['ics'] + ".shu", function (res) {
 					events = [];
 					var parsed = ICAL.parse(res);
+					console.log(parsed)
 					parsed[2].forEach(function (event) {
 						if (event[0] !== 'vevent') return
 						var summary, location, start, end, description, duration;
@@ -104,16 +108,24 @@
 									break;
 								case 'description':
 									description = event_item[3]
-									data = description.split('\n');
-									description = ((data[1] == null || data[1] === "") ? "" : (data[1].split(':')[1] + "<br>"));
-									duration = ((data[2] == null) ? "" : (data[2].split(':')[1] + "<br>"))
-										+ ((data[3] == null) ? "" : (data[3].split(':')[1] + "<br>"))
-
+									if (description.includes("CM")) {
+										type = "CM";
+									}
+									if (description.includes("TP")) {
+										type = "TP";
+									}
+									if (description.includes("TD")) {
+										type = "TD";
+									}
+									const teacherNamePattern = /([A-Z][a-z]{3,} [A-Z][a-z]+)\n/g;
+									let teacherName = teacherNamePattern.exec(description);
+									if (teacherName) {
+										description = teacherName[0];
+									}
 									break;
 								case 'summary':
 									summary = event_item[3]
-									data = summary.split('_');
-									summary = (data[1] == null) ? summary : (data[1] + " " + data[2]);
+									summary = summary.split("-")[0]
 									break;
 								case 'dtstart':
 									start = event_item[3];
@@ -132,22 +144,7 @@
 							var todaysDate = new Date();
 							var isToday = true; //(todaysDate.toDateString() == start.toDateString());
 							if (isToday) {
-
-								summary = summary.replace("RT-FI-", "");
-								summary = summary.replace("RT-FA-", "");
-								summary = summary.replace("LPRIMS-FI-", "");
-								type = "CM";
-								if (summary[0] == 'M' || summary[0] == 'R' || summary.includes("SAE")) {
-									type = summary.split("- ")[summary.split("- ").length - 1];
-									summary = summary.split(" ")[0] + "-" + type;
-								}
-								if (summary[0] == 'L' && summary[1] == 'P') {
-									type = summary.split("- ")[summary.split("- ").length - 1];
-									summary = summary.split("-")[1]
-									summary = summary.split(" ")[0] + "-" + type;
-								}
 								
-								description = description.split(".")[0]
 								border = colors[Math.floor(group['id'] / 10)]; 
 								if (type == "CM") {
 									border = "black";
@@ -160,10 +157,11 @@
 									border = "blue";
 								}
 								display = 'block';
-								if(duration.includes("visio") 
-									|| duration.includes("distanciel") ){
-									display = 'background';
-								}
+								// format duration as HH:mm
+								duration = moment.duration(end - start).asMinutes();
+								duration = moment.utc(duration * 60000).format('HH[h]mm');
+
+								summary = "[" + type + "]" + " <b>" + summary + "</b>";
 
 								events.push({
 									title: "<h3>" + summary + "</h3><i class='fas fa-user'></i><i>" + description + "</i> <br><i class='fas fa-home'></i> <b>" + location + "</b> <br><br><i class='fas fa-hourglass-half'></i> " + duration,
