@@ -100,7 +100,7 @@
 					console.log(parsed)
 					parsed[2].forEach(function (event) {
 						if (event[0] !== 'vevent') return
-						var summary, location, start, end, description, duration;
+						var summary, location, start, end, description, duration, teacher;
 						event[1].forEach(function (event_item) {
 							switch (event_item[0]) {
 								case 'location':
@@ -120,10 +120,10 @@
 									const teacherNamePattern = /([A-Z][a-z]{3,} [A-Z][a-z]+)\n/g;
 									let teacherName = teacherNamePattern.exec(description);
 									if (teacherName) {
-										description = teacherName[0];
+										teacher = teacherName[0];
 									}
 									else {
-										description = "-";
+										teacher = "-";
 									}
 									break;
 								case 'summary':
@@ -142,7 +142,7 @@
 									break;
 							}
 						})
-						if (summary && description && start && end) {
+						if (summary && teacher && start && end) {
 
 							var todaysDate = new Date();
 							var isToday = true; //(todaysDate.toDateString() == start.toDateString());
@@ -167,7 +167,7 @@
 								summary = "[" + type + "]" + " <b>" + summary + "</b>";
 
 								events.push({
-									title: "<h3>" + summary + "</h3><i class='fas fa-user'></i><i>" + description + "</i> <br><i class='fas fa-home'></i> <b>" + location + "</b> <br><br><i class='fas fa-hourglass-half'></i> " + duration,
+									title: "<h3>" + summary + "</h3><i class='fas fa-user'></i><i>" + teacher + "</i> <br><br><i class='fas fa-home'></i> <b>" + location + "</b> <br><br><i class='fas fa-hourglass-half'></i> " + duration,
 									display: display,
 									start: start,
 									end: end,
